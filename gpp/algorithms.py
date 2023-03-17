@@ -48,3 +48,18 @@ def longest_common_sequence(s1: str, s2: str) -> int:
             DP[idx][j] = 1 + diag if s2[i] == s1[j] else max(left, up)
 
     return DP[idx][len1 - 1]
+
+
+class SegmentTree:
+    # todo
+    pass
+
+
+class SegmentTreeLazyPropagation:
+    # todo
+    pass
+
+
+class FenwickTree:
+    # todo
+    pass
