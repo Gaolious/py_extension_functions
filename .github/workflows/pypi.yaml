@@ -1,10 +1,9 @@
 name: deploy pypi
 
-on: push
+on:
+  release:
+    types: [published]
 
-#  release:
-#    types: [published]
-#
 
 jobs:
   run:

@@ -13,8 +13,8 @@ clean: clean-test clean-build clean-pyc clean-docs
 clean-build:
 	rm -rf ./build
 	rm -rf ./dist
-	find . -name '*.egg-info' -exec rm -fr {} +
-	find . -name '*.egg' -exec rm -fr {} +
+	find . -name '*.egg-info' -exec rm -rf {} +
+	find . -name '*.egg' -exec rm -rf {} +
 
 clean-docs:
 	rm -rf ./docs/build
@@ -27,14 +27,15 @@ clean-pyc:
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
-	find . -name '__pycache__' -exec rm -fr {} +
+	find . -name '__pycache__' -exec rm -rf {} +
 
 clean-test:
-	rm -fr .cache/
-	rm -fr .tox/
+	rm -rf .cache/
+	rm -rf .tox/
 	rm -f .coverage
-	rm -fr htmlcov/
-	rm -fr .pytest_cache/
+	rm -f .coverage.xml
+	rm -rf htmlcov/
+	rm -rf .pytest_cache/
 
 test:
 	pytest gpp tests
