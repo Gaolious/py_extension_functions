@@ -1,12 +1,7 @@
-name: final_task
+name: codecov
 
 on:
-  push:
-    branches:
-      - develop
   pull_request:
-    branches:
-      - "**"
 
 jobs:
   run:
