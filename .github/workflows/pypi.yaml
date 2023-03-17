@@ -2,6 +2,10 @@ name: deploy pypi
 
 on: push
 
+#  release:
+#    types: [published]
+#
+
 jobs:
   run:
     runs-on: ubuntu-latest

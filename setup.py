@@ -2,13 +2,18 @@
 from setuptools import setup, find_packages
 import gpp
 
+with open('README.md', encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(
     name="ajava_pyext_functions",
     version=gpp.__version__,
     author="aJava",
     author_email="gaolious@gmail.com",
     description="personally, python extension functions",
-    url="https://github.com/Gaolious/gpp",
+    long_description_content_type='text/markdown',
+    long_description=long_description,
+    url="https://github.com/Gaolious/py_extension_functions",
     packages=find_packages(include=('gpp',), exclude=('__pycache__',)),
     include_package_data=True,
     python_requires=">=3.9",
