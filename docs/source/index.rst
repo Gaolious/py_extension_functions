@@ -11,7 +11,12 @@ pip를 이용한 설치::
  $ pip install ajava_pyext_functions
 
 
-설치 이후 Django Project의 settings ``INSTALLED_APPS`` 에 추가 해야 합니다.
+설치 이후 Django Project의 settings ``INSTALLED_APPS`` 에 추가 해야 합니다. ::
+
+  INSTALLED_APPS = (
+      ...
+      'gpp',
+  )
 
 
 Contents
@@ -20,7 +25,6 @@ Contents
 .. toctree::
    :maxdepth: 3
 
-   installation
    gpp
 
 

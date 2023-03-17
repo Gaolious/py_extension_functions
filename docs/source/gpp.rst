@@ -1,4 +1,4 @@
-GPP Utils
+GPP
 ==================
 
 .. toctree::
