@@ -40,7 +40,6 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Optional, Union
 
-from gpp.constants import KST
 from gpp.datetimes import dt
 
 HANGUL_PATTERN = re.compile('[가-힣|ㄱ-ㅎ|ㅏ-ㅣ]+')
@@ -267,9 +266,9 @@ def convert_integer(text: str, default: Optional[int] = None):
     :Example:
         >>> from gpp.texts import convert_integer
         >>> convert_integer('584')
-        5848701610
-        >>> convert_integer('서울02')
-        None
+        584
+        >>> convert_integer('서울02', 11)
+        11
         >>> convert_integer('         02')
         2
     """

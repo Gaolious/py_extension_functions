@@ -276,6 +276,7 @@ def test_convert_decimal(in_data, default, expected):
     # assertion
     assert ret == expected
 
+
 @pytest.mark.parametrize(
     'in_data, default, expected', [
         (None, None, None),
@@ -311,6 +312,7 @@ def test_convert_integer(in_data, default, expected):
     ##########################################################
     # assertion
     assert ret == expected
+
 
 @pytest.mark.parametrize(
     'in_data, unit, default, expected', [

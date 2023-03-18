@@ -185,7 +185,7 @@ def test_proj_coord_and_coord(lng, lat, x, y):
 
 @pytest.mark.parametrize(
     'lng, lat, x, y', [
-        (127.0, i/10.0, 0.8527777777777779, 1) for i in range(-900, -850, 5)
+        (127.0, i / 10.0, 0.8527777777777779, 1) for i in range(-900, -850, 5)
     ]
 )
 def test_proj_coord_and_coord_except_latitude_1(lng, lat, x, y):
@@ -217,7 +217,7 @@ def test_proj_coord_and_coord_except_latitude_1(lng, lat, x, y):
 
 @pytest.mark.parametrize(
     'lng, lat, x, y', [
-        (127.0, i/10.0, 0.8527777777777779, 0) for i in range(900, 850, -5)
+        (127.0, i / 10.0, 0.8527777777777779, 0) for i in range(900, 850, -5)
     ]
 )
 def test_proj_coord_and_coord_except_latitude_2(lng, lat, x, y):

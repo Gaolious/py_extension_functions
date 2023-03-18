@@ -27,8 +27,8 @@ def dt(year: int, month: int, day: int, h: int = 0, m: int = 0, s: int = 0, ms: 
     :Example:
         >>> from gpp.datetimes import dt
         >>> ret = dt(2023, 1, 1)
-        >>> ret.year, ret.month, ret.day, ret.hour, ret.minute, ret.second, ret.microsecond, ret.tzinfo
-        (2023, 1, 1, 0, 0, 0, 0, <DstTzInfo 'Asia/Seoul' KST+9:00:00 STD>)
+        >>> ret.year, ret.month, ret.day, ret.hour, ret.minute, ret.second, ret.microsecond
+        (2023, 1, 1, 0, 0, 0, 0)
     """
     try:
         return datetime(year=year, month=month, day=day, hour=h, minute=m, second=s, microsecond=ms, tzinfo=KST)
