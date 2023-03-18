@@ -1,3 +1,8 @@
+[![Known Vulnerabilities](https://snyk.io/test/github/Gaolious/py_extension_functions/badge.svg)](https://snyk.io/test/github/Gaolious/py_extension_functions)
+[![codecov](https://codecov.io/gh/Gaolious/py_extension_functions/branch/develop/graph/badge.svg?token=ZiOpnKfxT4)](https://codecov.io/gh/Gaolious/py_extension_functions)
+[![Documentation Status](https://readthedocs.org/projects/py-extension-functions/badge/?version=stable)](https://py-extension-functions.readthedocs.io/en/stable/?badge=stable)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Django를 이용한 프로젝트에 공통적으로 쓰이는 module 모음 입니다.
 
 ## 시작하기
@@ -5,10 +10,10 @@ Django를 이용한 프로젝트에 공통적으로 쓰이는 module 모음 입�
 - https://py-extension-functions.readthedocs.io/
 
 ### 설치
-- pypi : https://pypi.org/project/ajava-pyext-functions/
+- pypi : https://pypi.org/project/py_extension_functions/
 - github : https://github.com/Gaolious/py_extension_functions
 ```shell
-$ pip install ajava_pyext_functions
+$ pip install py_extension_functions
 ```
 
 ### 설정

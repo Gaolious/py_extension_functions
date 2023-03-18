@@ -15,7 +15,7 @@ class Coordinate:
 
         :ivar lng: 경도 (-180 <= 경도 <= 180)
         :type lng: float
-        :ivar lat: 위도 (-90 <= 위도 <= 90)
+        :ivar lat: 위도 (-85 <= 위도 <= 85)
         :type lat: float
     """
 
@@ -27,7 +27,7 @@ class Coordinate:
         self.lat = lat
 
 
-class ProjXY(object):
+class ProjectedCoordinate(object):
     """
         메르카토르 도법에 의해 투영(projection)된 및 0 ~ 1로 scale된 xy 평면 좌표
 
@@ -54,7 +54,7 @@ class ProjXY(object):
 
 class Tile(object):
     """
-        Point 객체를 zoom level에 따라 tile index로 표현
+        ProjectedCoordinate 객체를 zoom level에 따라 tile index로 표현
 
         ::
 
@@ -82,14 +82,14 @@ class Tile(object):
         self.z = zoom_level
 
 
-def coord2point(coord: Coordinate) -> ProjXY:
+def coord_to_proj_coord(coord: Coordinate) -> ProjectedCoordinate:
     """
     위경도 좌표 범위를 Point로 변환
 
     :param coord: 위경도
     :type coord: Coordinate
-    :return: Point instance
-    :rtype: ProjXY
+    :return: ProjectedCoordinate instance
+    :rtype: ProjectedCoordinate
     """
     x = coord.lng / 360.0 + 0.5
 
@@ -101,50 +101,50 @@ def coord2point(coord: Coordinate) -> ProjXY:
         y = math.sin(coord.lat * DEG_TO_RAD)
         y = 0.5 - math.log((1 + y) / (1 - y)) / V_4PI
 
-    return ProjXY(x=x, y=y)
+    return ProjectedCoordinate(x=x, y=y)
 
 
-def point2coord(point: ProjXY) -> Coordinate:
+def proj_coord_to_coord(proj_coord: ProjectedCoordinate) -> Coordinate:
     """
     Point를 위경도 좌표 범위로 변환
 
-    :param point: projected & converted coordinate
-    :type point: ProjXY
+    :param proj_coord: projected & converted coordinate
+    :type proj_coord: ProjectedCoordinate
     :return: Coordinate Instance
     :rtype: Coordinate
     """
 
-    lng = 360.0 * (point.x - 0.5)
+    lng = 360.0 * (proj_coord.x - 0.5)
 
-    lat = 2 * math.atan(math.exp((0.5 - point.y) * V_2PI)) - V_PI_2
+    lat = 2 * math.atan(math.exp((0.5 - proj_coord.y) * V_2PI)) - V_PI_2
     lat = lat * RAD_TO_DEG
 
     return Coordinate(lng=lng, lat=lat)
 
 
-def tile2point(tile: Tile) -> ProjXY:
+def tile_to_proj_coord(tile: Tile) -> ProjectedCoordinate:
     """
-    Tile을 Point로 변환
+    Tile을 ProjectedCoordinate로 변환
 
     :param tile: Tile instance
     :type tile: Tile
-    :return: Point Instance
-    :rtype: ProjXY
+    :return: ProjectedCoordinate Instance
+    :rtype: ProjectedCoordinate
     """
     zp = 2 ** tile.z
 
     x = tile.x / zp
     y = tile.y / zp
 
-    return ProjXY(x=x, y=y)
+    return ProjectedCoordinate(x=x, y=y)
 
 
-def point2tile(point: ProjXY, zoom_level: int) -> Tile:
+def proj_coord_to_tile(proj_coord: ProjectedCoordinate, zoom_level: int) -> Tile:
     """
-    Point를 Tile로 변환
+    ProjectedCoordinate를 Tile로 변환
 
-    :param point: Point instance
-    :type point: ProjXY
+    :param proj_coord: Point instance
+    :type proj_coord: ProjectedCoordinate
     :param zoom_level: zoom level
     :type zoom_level: int
     :return: Tile Instance
@@ -152,8 +152,8 @@ def point2tile(point: ProjXY, zoom_level: int) -> Tile:
     """
     zp = 2 ** zoom_level
 
-    x = int(point.x * zp)
-    y = int(point.y * zp)
+    x = int(proj_coord.x * zp)
+    y = int(proj_coord.y * zp)
 
     return Tile(x_index=x, y_index=y, zoom_level=zoom_level)
 
@@ -171,10 +171,10 @@ def distance(p1: Coordinate, p2: Coordinate) -> float:
     """
     r = 6371008.8  # earth radius (m)
 
-    lat1 = p1.lat * RAD_TO_DEG
-    lng1 = p1.lng * RAD_TO_DEG
-    lat2 = p2.lat * RAD_TO_DEG
-    lng2 = p2.lng * RAD_TO_DEG
+    lat1 = p1.lat * DEG_TO_RAD
+    lng1 = p1.lng * DEG_TO_RAD
+    lat2 = p2.lat * DEG_TO_RAD
+    lng2 = p2.lng * DEG_TO_RAD
 
     # calculate haversine
     lat = lat2 - lat1

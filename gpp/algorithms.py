@@ -25,6 +25,11 @@ def longest_common_sequence(s1: str, s2: str) -> int:
         >>> longest_common_sequence('서울강남초등학교', '서울강남 사립초교')
         6
     """
+    if not isinstance(s1, str):
+        s1 = str(s1 or '')
+    if not isinstance(s2, str):
+        s2 = str(s2 or '')
+
     len1 = len(s1)
     len2 = len(s2)
 

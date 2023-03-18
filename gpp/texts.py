@@ -41,7 +41,7 @@ from decimal import Decimal
 from typing import Optional, Union
 
 from gpp.constants import KST
-
+from gpp.datetimes import dt
 
 HANGUL_PATTERN = re.compile('[가-힣|ㄱ-ㅎ|ㅏ-ㅣ]+')
 TRIM_CHARS_PATTERN = re.compile(r'(\s*)')
@@ -50,15 +50,38 @@ NUMBER_PATTERN = re.compile(r'[^0-9\-\.]')
 WHITESPACE_CHARS = '\n\r\t\b\\\u200b '
 
 
-def remove_spaces(text: str, default: Optional[str] = None) -> str:
+def is_integers(*args) -> bool:
+    try:
+        if len(args) > 0 and all([float(n).is_integer() for n in args]):
+            return True
+
+    except TypeError:
+        return False
+    except ValueError:
+        return False
+
+    return False
+
+
+def is_numbers(*args) -> bool:
+    try:
+        if len(args) > 0 and all([isinstance(float(n), float) for n in args]):
+            return True
+    except TypeError:
+        return False
+    except ValueError:
+        return False
+
+    return False
+
+
+def remove_spaces(text: str) -> str:
     """
     주어진 문자열에서 ('\\n', '\\r', '\\t', '\\b, '\\u200b', ' ' ) 문자들을 제거 합니다.
 
 
     :param text: 외부 문자열
     :type text: str
-    :param default: 오류 발생시 기본값
-    :type default: Optional[str]
     :return: 변환된 문자열
     :rtype: Optional[str]
 
@@ -79,28 +102,21 @@ def remove_spaces(text: str, default: Optional[str] = None) -> str:
         >>> remove_spaces(1)
         '1'
     """
-    try:
-        if not isinstance(text, str):
-            text = str(text)
+    if not isinstance(text, str):
+        text = str(text or '')
 
-        for p in WHITESPACE_CHARS:
-            text = text.replace(p, '')
-        return text
-    except Exception as e:
-        print(str(e))
-        pass
+    for p in WHITESPACE_CHARS:
+        text = text.replace(p, '')
 
-    return default
+    return text
 
 
-def extract_hangul(text: str, default: Optional[str] = None):
+def extract_hangul(text: str):
     """
     주어진 문자열에서 한글만 추출합니다.
 
     :param text: 외부 문자열
     :type text: str
-    :param default: 오류 발생시 기본값
-    :type default: str
     :return: 변환된 문자열
     :rtype: Optional[str]
     :Example:
@@ -109,20 +125,13 @@ def extract_hangul(text: str, default: Optional[str] = None):
         '가나'
 
     """
-    try:
-
-        if not isinstance(text, str):
-            text = str(text)
-        ret = HANGUL_PATTERN.findall(text)
-        return ''.join(ret)
-
-    except Exception:
-        pass
-
-    return default
+    if not isinstance(text, str):
+        text = str(text)
+    ret = HANGUL_PATTERN.findall(text)
+    return ''.join(ret)
 
 
-def convert_words(text: str, default: Optional[str] = None):
+def convert_words(text: str):
     """
         단어들 사이에 있는 중복된 구분자들을 하나로 만듭니다.
 
@@ -137,17 +146,12 @@ def convert_words(text: str, default: Optional[str] = None):
         >>> convert_words('가   나')
         '가 나'
     """
-    try:
-        if not isinstance(text, str):
-            text = str(text)
+    if not isinstance(text, str):
+        text = str(text)
 
-        return ' '.join(
-            a for a in text.strip(WHITESPACE_CHARS).replace('\xa0', ' ').split() if a
-        )
-    except Exception:
-        pass
-
-    return default
+    return ' '.join(
+        a for a in text.strip(WHITESPACE_CHARS).replace('\xa0', ' ').split() if a
+    )
 
 
 def convert_date(text: str, default: Optional[datetime.date] = None) -> datetime.date:
@@ -169,30 +173,30 @@ def convert_date(text: str, default: Optional[datetime.date] = None) -> datetime
         >>> convert_date('20230101')
         datetime.date(2023, 1, 1)
     """
-    try:
-        text = TRIM_CHARS_PATTERN.sub('', text)
-        text = remove_spaces(text, default)
-        text = text.replace('.', '-').replace('\xa0', '')
-        try:
-            if '-' not in text and len(text) == 8 and str(int(text)) == text:
-                text = f'{text[:4]}-{text[4:6]}-{text[6:8]}'
-        except Exception as e1:
-            print(str(e1))
-            pass
 
-        ret = text.split('-')
-        if len(ret) == 3:
-            year, month, day = tuple(map(int, ret))
-            return KST.localize(datetime(year=year, month=month, day=day)).date()
+    if not isinstance(text, str):
+        text = str(text)
 
-    except Exception as e:
-        print(str(e))
-        pass
+    text = TRIM_CHARS_PATTERN.sub('', text)
+    text = remove_spaces(text)
+    text = text.replace('.', '-').replace('\xa0', '')
+
+    # format yyyymmdd
+    if is_integers(text) and len(text) == 8:
+        text = f'{text[:4]}-{text[4:6]}-{text[6:8]}'
+
+    ret = text.split('-')
+    if len(ret) == 3 and is_integers(*ret):
+        year, month, day = tuple(map(int, ret))
+        ret = dt(year=year, month=month, day=day)
+
+        if ret:
+            return ret.date()
 
     return default
 
 
-def convert_integer_as_string(text: str, default: Optional[str] = None):
+def extract_integer_as_string(text: str, default: Optional[str] = None):
     """
     text에서 정수를 추출하여 문자열로 반환 합니다.
 
@@ -203,26 +207,49 @@ def convert_integer_as_string(text: str, default: Optional[str] = None):
     :return: 정수로 구성된 문자열
     :rtype: Optional[str]
     :Example:
-        >>> from gpp.texts import convert_integer_as_string
-        >>> convert_integer_as_string('584-87-01610')
+        >>> from gpp.texts import extract_integer_as_string
+        >>> extract_integer_as_string('584-87-01610')
         '5848701610'
-        >>> convert_integer_as_string('서울02')
+        >>> extract_integer_as_string('서울02')
         '02'
     """
-    try:
-        flag = ''
-        text = NUMBER_PATTERN.sub('', text)
-        text = remove_spaces(text, default)
+    if not isinstance(text, str):
+        text = str(text)
 
-        if text and text.startswith('-'):
-            flag = '-'
-        text = text.replace('.', '').replace('-', '').replace(',', '')
+    flag = ''
+    text = NUMBER_PATTERN.sub('', text)
+    text = remove_spaces(text)
 
-        if text:
-            return f'{flag}{text}'
+    if text and text.startswith('-'):
+        flag = '-'
+    text = text.replace('.', '').replace('-', '').replace(',', '')
 
-    except Exception:
-        pass
+    if text:
+        return f'{flag}{text}'
+
+    return default
+
+
+def extract_integer(text: str, default: Optional[int] = None):
+    """
+    text에서 정수를 추출하여 반환 합니다.
+
+    :param text: 외부 문자열
+    :type text: str
+    :param default: 오류 발생시 기본값
+    :type default: Optional[int]
+    :return: 정수
+    :rtype: Optional[int]
+    :Example:
+        >>> from gpp.texts import extract_integer
+        >>> extract_integer('584-87-01610')
+        5848701610
+        >>> extract_integer('서울02')
+        2
+    """
+    ret = extract_integer_as_string(text, default)
+    if is_integers(ret):
+        return int(ret)
 
     return default
 
@@ -239,15 +266,16 @@ def convert_integer(text: str, default: Optional[int] = None):
     :rtype: Optional[int]
     :Example:
         >>> from gpp.texts import convert_integer
-        >>> convert_integer('584-87-01610')
+        >>> convert_integer('584')
         5848701610
         >>> convert_integer('서울02')
+        None
+        >>> convert_integer('         02')
         2
     """
-    try:
-        return int(convert_integer_as_string(text, default))
-    except Exception:
-        pass
+    number = convert_decimal(text, default)
+    if isinstance(number, Decimal):
+        return int(number)
 
     return default
 
@@ -269,23 +297,12 @@ def convert_decimal(text: str, default: Optional[Decimal] = None):
         >>> convert_decimal('-123.456789')
         Decimal('-123.456789')
     """
-    try:
-        text = str(text)
-        ret = text.split('.')
+    text = remove_spaces(text)
 
-        if len(ret) > 1:
-            a, b = convert_integer_as_string(ret[0]), convert_integer_as_string(ret[1])
-            text = '.'.join([a, b])
-
-        elif len(ret) == 1:
-            text = convert_integer_as_string(ret[0])
-
+    if is_numbers(text):
         num = Decimal(str(text))
         if num.is_finite():
             return num
-    except Exception as e:
-        print(str(e))
-        pass
 
     return default
 
@@ -308,7 +325,7 @@ def convert_money(text: str, unit: int = 1, default: Optional[int] = None) -> in
         10000000
     """
     try:
-        val = remove_spaces(text, default).split('.')
+        val = remove_spaces(text).split('.')
 
         if len(val) <= 2:
             val[0] = val[0].replace(',', '')
@@ -320,12 +337,12 @@ def convert_money(text: str, unit: int = 1, default: Optional[int] = None) -> in
     return default
 
 
-def convert_readable_filesize(num, suffix="B") -> str:
+def convert_readable_filesize(num: Union[int, float], suffix="B") -> str:
     """
     파일크기 num을 사람이 읽을 수 있는 문자열로 변환하여 반환 합니다.
 
     :param num: 파일크기
-    :type num: int
+    :type num: Union[int, float
     :param suffix: 문자열 끝에 붙일 첨자
     :return: 사람이 읽을 수 있는 문자열
     :rtype: str
@@ -354,7 +371,7 @@ def convert_readable_count(num: Union[int, float]) -> str:
     수량 num을 사람이 읽을 수 있는 문자열로 변환하여 반환 합니다.
 
     :param num: 수량
-    :type num: int
+    :type num: Union[int, float
     :rtype: str
     :Note:
         2^10이 아닌, 10^3으로 나눕니다.
@@ -376,7 +393,7 @@ def convert_readable_count(num: Union[int, float]) -> str:
             return f"{num:3.1f}{unit}"
         num /= 1000
 
-    return f"{num:3.1f} Y"
+    return f"{num:3.1f}Y"
 
 
 def convert_readable_timedelta(seconds: int) -> str:
