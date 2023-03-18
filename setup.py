@@ -6,7 +6,7 @@ with open('README.md', encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name="ajava_pyext_functions",
+    name="py_extension_functions",
     version=gpp.__version__,
     author="aJava",
     author_email="gaolious@gmail.com",

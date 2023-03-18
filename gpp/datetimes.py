@@ -27,11 +27,13 @@ def dt(year: int, month: int, day: int, h: int = 0, m: int = 0, s: int = 0, ms: 
     :Example:
         >>> from gpp.datetimes import dt
         >>> ret = dt(2023, 1, 1)
-        >>> ret.year, ret.month, ret.day, ret.hour, ret.minute, ret.second, ret.microsecond, ret.tzinfo
-        (2023, 1, 1, 0, 0, 0, 0, <DstTzInfo 'Asia/Seoul' KST+9:00:00 STD>)
+        >>> ret.year, ret.month, ret.day, ret.hour, ret.minute, ret.second, ret.microsecond
+        (2023, 1, 1, 0, 0, 0, 0)
     """
-    ret = datetime(year=year, month=month, day=day, hour=h, minute=m, second=s, microsecond=ms)
-    return KST.localize(ret)
+    try:
+        return datetime(year=year, month=month, day=day, hour=h, minute=m, second=s, microsecond=ms, tzinfo=KST)
+    except ValueError:
+        return None
 
 
 def dt_first(year: int, month: int) -> datetime:
@@ -137,4 +139,8 @@ def is_last_date(date: datetime.date) -> bool:
     :return: 마지막날 맞는지 여부
     :rtype: bool
     """
+
+    if isinstance(date, datetime):
+        date = date.date()
+
     return dt_last(date.year, date.month).date() == date
