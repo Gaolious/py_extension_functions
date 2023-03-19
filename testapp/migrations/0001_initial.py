@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import gpp.django.fields
+import gpp.model.fields
 
 
 class Migration(migrations.Migration):
@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
                 ('urlfield', models.URLField(verbose_name='URLField')),
                 ('binaryfield', models.BinaryField(verbose_name='BinaryField')),
                 ('uuidfield', models.UUIDField(verbose_name='UUIDField')),
-                ('compressefield', gpp.django.fields.CompressedTextField(max_length=10240, verbose_name='CompressedTextField')),
+                ('compressefield', gpp.model.fields.CompressedTextField(max_length=10240, verbose_name='CompressedTextField')),
             ],
             options={
                 'verbose_name': 'Test Model',
@@ -97,7 +97,7 @@ class Migration(migrations.Migration):
                 ('urlfield', models.URLField(verbose_name='URLField')),
                 ('binaryfield', models.BinaryField(verbose_name='BinaryField')),
                 ('uuidfield', models.UUIDField(verbose_name='UUIDField')),
-                ('compressefield', gpp.django.fields.CompressedTextField(max_length=10240, verbose_name='CompressedTextField')),
+                ('compressefield', gpp.model.fields.CompressedTextField(max_length=10240, verbose_name='CompressedTextField')),
                 ('archive_user', models.ForeignKey(db_constraint=False, db_index=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to=settings.AUTH_USER_MODEL)),
             ],
             options={

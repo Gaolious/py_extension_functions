@@ -1,8 +1,8 @@
 import pytest
 from django.test import override_settings
 
-from gpp.django.exceptions import InvalidTaskStatus
-from gpp.django.utils import archive_model, restore_model, get_model_differs, truncate_model, chunk_queryset, \
+from gpp.model.exceptions import InvalidTaskStatus
+from gpp.model.utils import archive_model, restore_model, get_model_differs, truncate_model, chunk_queryset, \
     chunk_list, check_task_status
 from testapp.models import AllFieldModel, ArchivedAllFieldModel, TaskModel
 

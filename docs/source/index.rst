@@ -27,7 +27,7 @@ Contents
    :maxdepth: 3
 
    gpp
-
+   gpp.model
 
 Indices and tables
 ==================

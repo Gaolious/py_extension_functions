@@ -1,9 +1,7 @@
 
 
 class InvalidTaskStatus(Exception):
-    """
-        TaskMinxin 에서 task status를 체크할 때 발생되는 Exception
-    """
+
     required_status, instance_status = None, None
 
     def __init__(self, required_status, instance_status):

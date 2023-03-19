@@ -11,6 +11,10 @@ import sys
 
 sys.path.insert(0, os.path.abspath('../../'))
 sys.path.insert(1, os.path.abspath('../../gpp'))
+import django
+sys.path.insert(0, os.path.abspath('..'))
+os.environ['DJANGO_SETTINGS_MODULE'] = 'testconf.settings'
+django.setup()
 
 from gpp import __version__ as VERSION
 
