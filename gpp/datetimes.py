@@ -1,5 +1,4 @@
 from typing import Tuple
-
 from gpp.constants import KST
 from datetime import timedelta, datetime
 
@@ -31,7 +30,8 @@ def dt(year: int, month: int, day: int, h: int = 0, m: int = 0, s: int = 0, ms: 
         (2023, 1, 1, 0, 0, 0, 0)
     """
     try:
-        return datetime(year=year, month=month, day=day, hour=h, minute=m, second=s, microsecond=ms, tzinfo=KST)
+        dt = datetime(year=year, month=month, day=day, hour=h, minute=m, second=s, microsecond=ms, tzinfo=KST)
+        return dt
     except ValueError:
         return None
 

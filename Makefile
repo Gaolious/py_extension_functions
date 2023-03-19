@@ -33,7 +33,7 @@ clean-test:
 	rm -rf .cache/
 	rm -rf .tox/
 	rm -f .coverage
-	rm -f .coverage.xml
+	rm -f coverage.xml
 	rm -rf htmlcov/
 	rm -rf .pytest_cache/
 

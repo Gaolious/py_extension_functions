@@ -17,7 +17,7 @@ setup(
     packages=find_packages(include=('gpp',), exclude=('__pycache__',)),
     include_package_data=True,
     python_requires=">=3.9",
-    install_requires=["pytz"],
+    install_requires=["pytz", "Django>=3.2"],
     license="MIT",
     classifiers=[
         "Programming Language :: Python",
