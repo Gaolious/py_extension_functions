@@ -2,8 +2,8 @@ from typing import List
 
 from django.db import models
 
-from gpp.django.fields import CompressedTextField
-from gpp.django.mixins import BaseModelMixin, ArchiveModelMixin, TaskModelMixin
+from gpp.model.fields import CompressedTextField
+from gpp.model.mixins import BaseModelMixin, ArchiveModelMixin, TaskModelMixin
 
 
 class AllFieldMixin(models.Model):

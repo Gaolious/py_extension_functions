@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import models, transaction
 from django.utils import timezone
 
-from gpp.django.exceptions import InvalidTaskStatus
+from gpp.model.exceptions import InvalidTaskStatus
 
 
 def archive_model(queryset, ARCHIVE_MODEL: Type[models.Model], user_id: int, delete_instance: bool):

@@ -10,18 +10,25 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Field
 from django.utils import timezone
-
-from django import VERSION as DJANGO_VERSION
-if DJANGO_VERSION >= (4, 0):
+import django
+if django.VERSION >= (4, 0):
     from django.utils.translation import gettext_lazy as _
 else:
     from django.utils.translation import ugettext_lazy as _
 
 from gpp.datetimes import dt
-from gpp.django.fields import CompressedTextField
+from gpp.model.fields import CompressedTextField
 
 
 def default_value(field: Field):
+    """
+        models.field에 형태에 임의의 값 반환
+
+    :param field: models.Field instance
+    :type field: models.Field
+    :return:
+    :rtype: Union[int, date, time, datetime, timedelta, byte, int, ...]
+    """
     mapping = [
         (models.CharField, '1'),
         (models.IntegerField, 1),
@@ -58,14 +65,14 @@ class BaseModelMixin(models.Model):
     @classmethod
     def dummy(cls, save=False, **kwargs):
         """
-            더미 데이터 생성
-        Args:
-            save: DB 저장 여부
-            **kwargs:
-                keyword argument based field values
+            dummy 데이터 생성
 
-        Returns:
-            instance of this class
+        :param save: DB 저장 여부
+        :type save: bool
+        :param kwargs: parameter
+        :type kwargs: dict
+        :return: instance
+        :type: Type[cls]
         """
         for field in cls._meta.fields:
             if field.attname in {'id'}:
