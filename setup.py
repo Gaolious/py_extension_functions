@@ -14,7 +14,7 @@ setup(
     long_description_content_type='text/markdown',
     long_description=long_description,
     url="https://github.com/Gaolious/py_extension_functions",
-    packages=find_packages(include=('gpp',), exclude=('__pycache__',)),
+    packages=find_packages(include=('gpp*',), exclude=('__pycache__', 'test*')),
     include_package_data=True,
     python_requires=">=3.9",
     install_requires=["pytz", "Django>=3.2"],
