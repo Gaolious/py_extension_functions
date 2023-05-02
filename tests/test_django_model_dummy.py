@@ -47,8 +47,9 @@ def test_dummy_model_with_save(multidb):
 
     ##########################################################
     # call function
-    dummy = AllFieldModel.dummy(save=True)
+    dummy = AllFieldModel.dummy(save=True, compressefield=b'aaaa')
 
+    dummy.refresh_from_db()
     ##########################################################
     # assertion
     assert dummy
@@ -75,4 +76,4 @@ def test_dummy_model_with_save(multidb):
     assert dummy.urlfield
     assert dummy.binaryfield
     assert dummy.uuidfield
-    assert dummy.compressefield
+    assert dummy.compressefield == 'aaaa'

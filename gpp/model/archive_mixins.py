@@ -16,7 +16,7 @@ class ArchiveModelMixin(models.Model):
 
     old_pk = models.BigIntegerField(_('old pk'), db_index=True, blank=False, editable=False)
 
-    archive_user_id = models.ForeignKey(
+    archive_user = models.ForeignKey(
         to=get_user_model(),
         on_delete=models.DO_NOTHING,
         related_name='+',

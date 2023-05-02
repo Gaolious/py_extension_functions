@@ -1,5 +1,4 @@
 from decimal import Decimal
-from typing import Optional
 
 from django import template
 
@@ -47,6 +46,7 @@ def money_1k(value):
     else:
         return value
 
+
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
@@ -62,5 +62,5 @@ def precision2(value):
     try:
         value = float(value)
         return '{0:,.2f}'.format(value)
-    except:
+    except Exception:
         return value
