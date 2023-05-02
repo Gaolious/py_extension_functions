@@ -94,7 +94,7 @@ def get_model_differs(src: models.Model, dest: models.Model) -> Dict[str, tuple]
         if src_field:
             return src_field.get_prep_value(value)
 
-        return None
+        return None  # pragma: no cover
 
     ret = {}
 

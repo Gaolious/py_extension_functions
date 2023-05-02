@@ -2,7 +2,7 @@ from django import VERSION as DJANGO_VERSION
 if DJANGO_VERSION >= (4, 0):
     from django.utils.translation import gettext_lazy as _
 else:
-    from django.utils.translation import ugettext_lazy as _
+    from django.utils.translation import ugettext_lazy as _  # pragma: no cover
 from django.db import models
 import lzma
 
@@ -53,9 +53,6 @@ class CompressedTextField(models.BinaryField):
         return decompress_data(self.value_from_object(obj))
 
     def to_python(self, value):
-        if value is not None:
-            if type(value) in (bytes, bytearray):
-                return decompress_data(value)
-            else:
-                return value
-        return value
+        if value is not None and type(value) in (bytes, bytearray):
+            return decompress_data(value)
+        return value  # pragma: no cover

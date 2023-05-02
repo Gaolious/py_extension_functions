@@ -2,6 +2,7 @@ import pytest
 from django.test import override_settings
 
 from gpp.model.exceptions import InvalidTaskStatus
+from gpp.model.fields import compress_data, decompress_data
 from gpp.model.utils import archive_model, restore_model, get_model_differs, truncate_model, chunk_queryset, \
     chunk_list, check_task_status
 from testapp.models import AllFieldModel, ArchivedAllFieldModel, TaskModel, CoordinateModel
@@ -52,6 +53,13 @@ def test_django_model_archive(multidb):
     assert not get_model_differs(dummy, new_instance)
 
 
+def test_django_model_diff():
+    dummy1 = AllFieldModel.dummy(save=False, compressefield = b'\1\2\3\4\5\6\7')
+
+    dummy2 = AllFieldModel.dummy(save=False)
+    assert get_model_differs(dummy1, dummy2)
+
+
 @pytest.mark.django_db
 def test_django_chunk_queryset(multidb):
     ##########################################################
@@ -81,7 +89,7 @@ def test_django_truncate_list():
 
     ##########################################################
     # call function
-    loop = chunk_list(data=data, chunk_size=7)
+    loop = chunk_list(data=tuple(data), chunk_size=7)
 
     ##########################################################
     # assertion
@@ -235,3 +243,27 @@ def test_django_is_valid_coordinate(multidb, lng, lat, expected):
     ##########################################################
     # call function
     assert task.is_valid_coordinate == expected
+
+
+@pytest.mark.parametrize('s', [
+    'asdf'
+])
+def test_compress_decompress(s):
+    a = compress_data(s)
+    b = decompress_data(a)
+
+    assert s == b
+
+    a = compress_data(s.encode('utf-8'))
+    b = decompress_data(a)
+
+    assert s == b
+
+
+def test_compress_decompress_null():
+    s = None
+    a = compress_data(s)
+    b = decompress_data(a)
+
+    assert s == b
+
