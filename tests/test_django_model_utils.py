@@ -54,7 +54,7 @@ def test_django_model_archive(multidb):
 
 
 def test_django_model_diff():
-    dummy1 = AllFieldModel.dummy(save=False, compressefield = b'\1\2\3\4\5\6\7')
+    dummy1 = AllFieldModel.dummy(save=False, compressefield=b'\1\2\3\4\5\6\7')
 
     dummy2 = AllFieldModel.dummy(save=False)
     assert get_model_differs(dummy1, dummy2)
