@@ -266,4 +266,3 @@ def test_compress_decompress_null():
     b = decompress_data(a)
 
     assert s == b
-
