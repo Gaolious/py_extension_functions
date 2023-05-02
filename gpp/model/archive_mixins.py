@@ -4,7 +4,7 @@ import django
 if django.VERSION >= (4, 0):
     from django.utils.translation import gettext_lazy as _
 else:
-    from django.utils.translation import ugettext_lazy as _
+    from django.utils.translation import ugettext_lazy as _  # pragma: no cover
 
 
 class ArchiveModelMixin(models.Model):
