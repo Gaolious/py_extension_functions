@@ -3,7 +3,9 @@ from typing import List
 from django.db import models
 
 from gpp.model.fields import CompressedTextField
-from gpp.model.mixins import BaseModelMixin, ArchiveModelMixin, TaskModelMixin
+from gpp.model.base_mixins import BaseModelMixin, TaskModelMixin
+from gpp.model.archive_mixins import ArchiveModelMixin
+from gpp.model.geo_mixins import CoordinateMixin
 
 
 class AllFieldMixin(models.Model):
@@ -88,3 +90,10 @@ class TaskModel(BaseModelMixin, TaskModelMixin):
     class Meta:
         verbose_name = 'Test Test Model'
         verbose_name_plural = 'Test Test Models'
+
+
+class CoordinateModel(BaseModelMixin, CoordinateMixin):
+
+    class Meta:
+        verbose_name = 'Test Coordinate Model'
+        verbose_name_plural = 'Test Coordinate Models'

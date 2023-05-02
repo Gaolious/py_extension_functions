@@ -38,6 +38,7 @@ clean-test:
 	rm -rf .pytest_cache/
 
 test:
+	export DJANGO_SETTINGS_MODULE=testconf.settings
 	pytest gpp tests
 
 coverage: test

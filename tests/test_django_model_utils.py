@@ -4,7 +4,7 @@ from django.test import override_settings
 from gpp.model.exceptions import InvalidTaskStatus
 from gpp.model.utils import archive_model, restore_model, get_model_differs, truncate_model, chunk_queryset, \
     chunk_list, check_task_status
-from testapp.models import AllFieldModel, ArchivedAllFieldModel, TaskModel
+from testapp.models import AllFieldModel, ArchivedAllFieldModel, TaskModel, CoordinateModel
 
 
 @pytest.mark.django_db
@@ -220,3 +220,18 @@ def test_django_check_task_each_set_functions(multidb):
     task.set_completed(save=True, update_fields=[])
     assert task.is_completed_task
     assert task.completed_datetime
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize('lng, lat, expected', [
+    (127, 36, True),
+    (157, 16, False),
+])
+def test_django_is_valid_coordinate(multidb, lng, lat, expected):
+    ##########################################################
+    # precondition
+    task = CoordinateModel.dummy(save=True, longitude=lng, latitude=lat)
+
+    ##########################################################
+    # call function
+    assert task.is_valid_coordinate == expected

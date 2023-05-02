@@ -1,5 +1,3 @@
-
-
 class InvalidTaskStatus(Exception):
 
     required_status, instance_status = None, None

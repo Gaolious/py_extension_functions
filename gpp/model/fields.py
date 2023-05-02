@@ -1,4 +1,3 @@
-
 from django import VERSION as DJANGO_VERSION
 if DJANGO_VERSION >= (4, 0):
     from django.utils.translation import gettext_lazy as _

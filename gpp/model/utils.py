@@ -55,7 +55,7 @@ def restore_model(queryset, SOURCE_MODEL: Type[models.Model], delete_instance: b
             field.attname: getattr(instance, field.attname)
             for field in instance._meta.fields if hasattr(SOURCE_MODEL, field.attname)
         }
-        for attr in ['archive_date', 'archive_user', 'archive_user_id']:
+        for attr in ['archive_date', 'archive_user_id']:
             data.pop(attr, None)
 
         src_instance = SOURCE_MODEL(**data)
