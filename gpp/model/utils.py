@@ -1,6 +1,6 @@
 import warnings
 from decimal import Decimal
-from typing import Dict, Type
+from typing import Dict, Type, Tuple
 
 from django.conf import settings
 from django.db import models, transaction
@@ -180,7 +180,7 @@ def truncate_model(MODEL):
     return False
 
 
-def check_task_status(MODEL: Type[models.Model], pk: int):
+def check_task_status(MODEL: Type[models.Model], pk: int) -> Tuple[models.Model, int]:
     """
         MODEL class의 pk를 row-level lock 상태로 load 후,
 
@@ -191,15 +191,16 @@ def check_task_status(MODEL: Type[models.Model], pk: int):
         pk:
 
     Returns:
+        Tuple[instance, previous status]
 
     """
     db_alias = MODEL.objects.db
     with transaction.atomic(using=db_alias):
         version = MODEL.objects.filter(id=pk).select_for_update().first()
-
+        old_status = version.task_status
         if version.is_processing_task:
             raise InvalidTaskStatus(version.CHOICE_TASK_STATUS_QUEUED, version.task_status)
 
         version.set_processing(save=True, update_fields=[])
 
-        return version
+        return version, old_status
