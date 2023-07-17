@@ -156,7 +156,7 @@ def test_django_check_task_status_valid(multidb, task_status):
 
     ##########################################################
     # call function
-    new_instance = check_task_status(MODEL=TaskModel, pk=task.id)
+    new_instance, _ = check_task_status(MODEL=TaskModel, pk=task.id)
 
     assert new_instance.is_processing_task
 
