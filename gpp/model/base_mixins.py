@@ -107,12 +107,14 @@ class TaskModelMixin(models.Model):
     CHOICE_TASK_STATUS_PROGRESSING = 20  # pop from MQ
     CHOICE_TASK_STATUS_ERROR = 30  # something wrong...
     CHOICE_TASK_STATUS_COMPLETED = 40  # complete
+    CHOICE_TASK_STATUS_BACKUP = 50  # S3 Backup
 
     CHOICE_TASK_STATUS = (
         (CHOICE_TASK_STATUS_QUEUED, _('in queued')),
         (CHOICE_TASK_STATUS_PROGRESSING, _('in processing')),
         (CHOICE_TASK_STATUS_ERROR, _('error')),
         (CHOICE_TASK_STATUS_COMPLETED, _('completed')),
+        (CHOICE_TASK_STATUS_BACKUP, _('s3 Backup')),
     )
 
     task_status = models.PositiveSmallIntegerField(
@@ -191,12 +193,17 @@ class TaskModelMixin(models.Model):
         return self.task_status == self.CHOICE_TASK_STATUS_COMPLETED
 
     @property
+    def is_backup_task(self):
+        return self.task_status == self.CHOICE_TASK_STATUS_BACKUP
+
+    @property
     def task_badge_class(self):
         mapping = {
             self.CHOICE_TASK_STATUS_QUEUED: 'bg-secondary',
             self.CHOICE_TASK_STATUS_PROGRESSING: 'bg-info',
             self.CHOICE_TASK_STATUS_ERROR: 'bg-danger',
             self.CHOICE_TASK_STATUS_COMPLETED: 'bg-success',
+            self.CHOICE_TASK_STATUS_BACKUP: 'bg-warning',
         }
         return mapping.get(self.task_status, '')
 
